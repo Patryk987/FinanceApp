@@ -1,5 +1,5 @@
 var builder = WebApplication.CreateBuilder(args);
-// Aplikacja do zarz¹dzania finanasami 
+// Aplikacja do zarzï¿½dzania finanasami 
 
 // Add services to the container.
 
@@ -26,4 +26,4 @@ app.MapControllers();
 app.Run();
 
 //test adrian
-//asdasd
+//komentarz Janek
