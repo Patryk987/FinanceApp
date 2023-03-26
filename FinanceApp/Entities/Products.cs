@@ -1,6 +1,11 @@
 ﻿namespace FinanceApp.Entities
 {
-    public class Productscs
+    public class Products
     {
+        public int Id { get; set; }
+
+
+
+        public ProductGroup ProductGroup { get; set; }
     }
 }
