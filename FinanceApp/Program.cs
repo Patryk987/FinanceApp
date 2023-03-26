@@ -1,4 +1,4 @@
-
+global using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 // Aplikacja do zarzadzania finanasami 

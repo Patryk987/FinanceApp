@@ -13,7 +13,7 @@
         public int DocumentPosId { get; set; }
 
         //Relacja wiele do 1 z ProductGroup
-        public ProductGroup ProductGroup { get; set; }
+        public virtual ProductGroup ProductGroup { get; set; }
         public int ProductGroupId { get; set;}
 
     }

@@ -10,11 +10,11 @@
 
 
         //relacja 1 do wiele do Payments
-        public List(Payments) Payment { get; set;} = new List<Payments>;
+        public virtual List<Payments> Payments { get; set; }
         // relacja 1 do wiele do Documents
         public List<Documents> Document { get; set; } = new List<Documents>();
         //relacja wiele do 1 do FamilyGroup
-        public FamilyGroup FamilyGroup { get; set; }
+        public virtual FamilyGroup FamilyGroup { get; set; }
         public int FamilyGroupId { get; set; }
 
     }

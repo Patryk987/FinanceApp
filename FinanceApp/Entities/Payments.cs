@@ -11,7 +11,8 @@
         public string Currency  { get; set; }
 
         //Relacja 1 do 1 z Savings
-        public Savings Savings { get; set; }
+        public virtual Savings Savings { get; set; }
+        public int SavingsId { get; set; }
         //Relacja wiele do 1 z Users
         public Users Users { get; set; }
         public int UserId { get; set; }

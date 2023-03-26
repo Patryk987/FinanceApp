@@ -14,14 +14,14 @@
 
 
         //Relacja Wiele do 1 z Users
-        public Users Users { get; set; }
+        public virtual Users Users { get; set; }
         public int UserId { get; set; }
 
         //Relacja 1 do wielu z DocumentPos
         public List<DocumentPos> DocPos { get; set; } = new List<DocumentPos>();
 
         //Relacja Wiele do 1 z Shops
-        public Shops Shops { get; set; }
+        public virtual Shops Shops { get; set; }
         public int ShopId { get; set;}
 
 

@@ -7,6 +7,6 @@
 
         public string Name { get; set; }
 
-        public List(Products) Products { get; set; }
+        public virtual List<Products> Products { get; set; }
     }
 }
