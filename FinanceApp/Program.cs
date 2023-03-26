@@ -1,5 +1,5 @@
 var builder = WebApplication.CreateBuilder(args);
-// Aplikacja do zarz�dzania finanasami 
+// Aplikacja do zarzadzania finanasami 
 
 // Add services to the container.
 
