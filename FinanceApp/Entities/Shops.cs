@@ -7,8 +7,6 @@
 
         public string Name { get; set; }
 
-        public Documents Document { get; set; }
-
-        public int DocumenstId { get; set; }
+        public List<Documents> Documents { get; set; } = new List<Documents>();
     }
 }

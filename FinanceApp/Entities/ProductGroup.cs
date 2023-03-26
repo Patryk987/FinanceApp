@@ -7,8 +7,6 @@
 
         public string Name { get; set; }
 
-        public Products Product { get; set; }
-
-        public int ProductId { get; set; }
+        public List(Products) Products { get; set; }
     }
 }

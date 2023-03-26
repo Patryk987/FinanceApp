@@ -9,6 +9,8 @@
 
         public Users user { get; set; }
 
-        public int UserId { get; set; }
+
+        //Relacja 1 do wielu z User
+        public List<Users> Users { get; set; } = new List<Users>();
     }
 }
