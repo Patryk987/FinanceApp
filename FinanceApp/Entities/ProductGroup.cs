@@ -1,12 +1,11 @@
 ﻿namespace FinanceApp.Entities
 {
-    public class ProductGroup
+    public partial class ProductGroup
     {
+        public int IdGroup { get; set; }
 
-        public int Id { get; set; }
+        public string Name { get; set; } = null!;
 
-        public string Name { get; set; }
-
-        public virtual List<Products> Products { get; set; }
+        public virtual ICollection<Product> Products { get; } = new List<Product>();
     }
 }
