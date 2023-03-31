@@ -33,11 +33,19 @@ public virtual DbSet<Saving> Savings { get; set; }
 
 public virtual DbSet<Shop> Shops { get; set; }
 
+<<<<<<< Updated upstream
 public virtual DbSet<User> Users { get; set; }
 
 protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
     => optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=FinanceApp;Integrated Security=True;TrustServerCertificate=True;");
+=======
+public virtual DbSet<Users> User { get; set; }
+
+protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+    => optionsBuilder.UseSqlServer("Data Source=ADRIAN\\SQLEXPRESS;Initial Catalog=FinanceApp;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False");
+>>>>>>> Stashed changes
 
 protected override void OnModelCreating(ModelBuilder modelBuilder)
 {
