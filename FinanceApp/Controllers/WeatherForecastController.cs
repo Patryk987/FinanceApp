@@ -29,5 +29,10 @@ namespace FinanceApp.Controllers
             })
             .ToArray();
         }
+        [HttpGet("{id}")]
+        public string Get(int id)
+        {
+            return "value";
+        }
     }
 }

@@ -1,4 +1,5 @@
 global using Microsoft.EntityFrameworkCore;
+using FinanceApp.Controllers;
 using FinanceApp.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,7 +14,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
-//builder.Services.AddDbContext < FinanceAppContext() >;//dodal janek
+builder.Services.AddDbContext<FinanceAppContext>();
 
 var app = builder.Build();
 

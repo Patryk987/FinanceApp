@@ -10,15 +10,19 @@ namespace FinanceApp.Controllers
     [ApiController]
     public class FinanceAppController : ControllerBase
     {
+
         private readonly FinanceAppContext _dbContext;
         public FinanceAppController(FinanceAppContext dbContext) 
         {
             _dbContext  = dbContext;
         }
+        
+
         // GET: api/<FinanceAppController>
         [HttpGet(Name = "user")]
-        public ActionResult <IEnumerable<User>> GetAllUser()
+        public ActionResult <IEnumerable<Users>> GetAllUser()
         {
+
             var users = _dbContext.Users.ToList() ;
 
             return Ok(users);

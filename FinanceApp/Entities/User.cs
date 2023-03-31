@@ -1,6 +1,6 @@
 ﻿namespace FinanceApp.Entities
 {
-    public partial class User
+    public partial class Users
     {
         public int Id { get; set; }
 
