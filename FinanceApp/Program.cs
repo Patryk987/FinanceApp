@@ -1,4 +1,5 @@
 global using Microsoft.EntityFrameworkCore;
+using FinanceApp.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 // Aplikacja do zarzadzania finanasami 
@@ -11,7 +12,8 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddControllers();   //dodal janek
+builder.Services.AddControllers();
+//builder.Services.AddDbContext < FinanceAppContext() >;//dodal janek
 
 var app = builder.Build();
 
