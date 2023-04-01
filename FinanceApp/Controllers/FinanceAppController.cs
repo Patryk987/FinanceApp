@@ -1,4 +1,5 @@
 ﻿using FinanceApp.Entities;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Immutable;
 
@@ -16,23 +17,39 @@ namespace FinanceApp.Controllers
         {
             _dbContext  = dbContext;
         }
-        
-
-        // GET: api/<FinanceAppController>
-        [HttpGet(Name = "user")]
+        // GET: wszystkich użytkowników
+        [HttpGet("Users")]
         public ActionResult <IEnumerable<Users>> GetAllUser()
         {
+<<<<<<< Updated upstream
 
             var users = _dbContext.User.ToList() ;
+=======
+            var users = _dbContext.Users.ToList() ;
+>>>>>>> Stashed changes
 
+            if (users == null) { return NotFound(); }
             return Ok(users);
         }
 
-        // GET api/<FinanceAppController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+
+        // GET: uzytkownika po loginie
+        [HttpGet("User{login}")]
+        public ActionResult<Users> GetByLogin([FromRoute] string login)
+        {            
+            var user = _dbContext.Users.FirstOrDefault(
+                x => x.Login.ToLower() == login.ToLower());
+            if (user == null) { return NotFound(); }
+            return Ok(user);
+        }
+        //Get: wszystkich dokumentów
+        [HttpGet( "Document")]
+        public ActionResult<IEnumerable<Document>> GetAllDocuments()
         {
-            return "value";
+            var documents = _dbContext.Documents.ToList();
+
+            if (documents == null) { return NotFound(); }
+            return Ok(documents);
         }
 
         // POST api/<FinanceAppController>
