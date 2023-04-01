@@ -19,14 +19,10 @@ namespace FinanceApp.Controllers
         }
         // GET: wszystkich użytkowników
         [HttpGet("Users")]
-        public ActionResult <IEnumerable<Users>> GetAllUser()
+        public ActionResult <IEnumerable<User>> GetAllUser()
         {
-<<<<<<< Updated upstream
 
-            var users = _dbContext.User.ToList() ;
-=======
             var users = _dbContext.Users.ToList() ;
->>>>>>> Stashed changes
 
             if (users == null) { return NotFound(); }
             return Ok(users);
@@ -35,7 +31,7 @@ namespace FinanceApp.Controllers
 
         // GET: uzytkownika po loginie
         [HttpGet("User{login}")]
-        public ActionResult<Users> GetByLogin([FromRoute] string login)
+        public ActionResult<User> GetByLogin([FromRoute] string login)
         {            
             var user = _dbContext.Users.FirstOrDefault(
                 x => x.Login.ToLower() == login.ToLower());
