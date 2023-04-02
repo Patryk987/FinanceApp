@@ -1,4 +1,5 @@
 global using Microsoft.EntityFrameworkCore;
+using FinanceApp.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 // Aplikacja do zarzadzania finanasami 
@@ -12,6 +13,12 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();   //dodal janek
+
+builder.Services.AddDbContext<FinanceAppContext>
+    (option => option.UseSqlServer(builder.Configuration.GetConnectionString("FinanceAppDbConnection"))); // <== con do bazy
+
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
 
 var app = builder.Build();
 
