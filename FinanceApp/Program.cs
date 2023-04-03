@@ -18,7 +18,7 @@ builder.Services.AddDbContext<FinanceAppContext>
     (option => option.UseSqlServer(builder.Configuration.GetConnectionString("FinanceAppDbConnection"))); // <== con do bazy
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-//builder.Services.AddSingleton<DapperContex>();
+builder.Services.AddSingleton<DapperContex>();
 
 var app = builder.Build();
 

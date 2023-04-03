@@ -13,50 +13,66 @@ namespace FinanceApp.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-
+        private readonly DapperContex _dapperContex;
         private readonly FinanceAppContext _dbContext;
         private readonly IMapper _mapper;
         
 
-        public UserController(FinanceAppContext dbContext, IMapper mapper)
+        public UserController(FinanceAppContext dbContext, IMapper mapper, DapperContex DapperContex)
         {
             _dbContext = dbContext;
             _mapper = mapper;
+            _dapperContex = DapperContex;
+            
         }
         // GET: wszystkich użytkowników
         [HttpGet("Users")]
         public ActionResult<IEnumerable<User>> GetAllUser()
         {
-
-            var users = _dbContext
-                .Users
-                .ToList();
-
-            if (users == null) { return NotFound(); }
-            return Ok(users);
+            var sql = "SELECT * FROM Users";
+            using (var sqlcon = _dapperContex.Connect())
+            {
+                var x = sqlcon.Query(sql).ToList();
+                if (x == null) { return NotFound(); }
+                return Ok(x);
+            }
         }
 
 
         // GET: uzytkownika po loginie
-        [HttpGet("User{login}")]
+        [HttpGet("{login}")]
         public ActionResult<User> GetByLogin([FromRoute] string login)
         {
-            var user = _dbContext.Users.FirstOrDefault(
-                x => x.Login.ToLower() == login.ToLower());
-            if (user == null) { return NotFound(); }
-            return Ok(user);
-        }
-        [HttpGet("User-1")]
-        public ActionResult<IEnumerable<User>> dapper()
-        {
-            using(var  sqlcon = new SqlConnection("Data Source=ADRIAN\\SQLEXPRESS;Initial Catalog=FinanceApp;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False"))
+            var sql = $"SELECT login FROM Users WHERE login = '{login}'";
+            using (var sqlcon = _dapperContex.Connect())
             {
-                var sql = "select d.name,prod.Name towar, pos.price from Documents d\r\njoin DocumentPos pos on d.id = pos.idDoc\r\njoin products prod on prod.id=pos.idProd";
-                var x = sqlcon.Query<User>(sql).ToList();
+                var x = sqlcon.QuerySingleOrDefault(sql);
                 if (x == null) { return NotFound(); }
                 return Ok(x);
             }
-            
         }
+        //dodawanie uzytkownika
+        [HttpPost]
+        public ActionResult CreateUser([FromBody]  User user)
+        {
+            var sql = "INSERT INTO [dbo].[users]([Login],[Name],[Surname],[IdGroup],[password],[CreateDate])" +
+                      "Values (@Login,@Name,@Surname,@IdGroup,@password,@CreateDate)";
+
+            var parameters = new DynamicParameters();
+                parameters.Add("Login", user.Login);
+                parameters.Add("password", user.Password);
+                parameters.Add("Name", user.Name);
+                parameters.Add("Surname", user.Surname);
+                parameters.Add("IdGroup", user.IdGroup);
+                parameters.Add("CreateDate", DateTime.Now);
+
+            using (var sqlcon = _dapperContex.Connect())
+            {
+                var exec = sqlcon.Execute(sql, parameters);
+                return Created($"api/financeApp/User/{user.Login}", null);
+            }
+           
+        }
+
     }
 }

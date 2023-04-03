@@ -6,16 +6,17 @@ namespace FinanceApp.Entities
 {
     public class DapperContex
     {
+        string contex = File.ReadAllText("c:\\DbContex.txt");
         private readonly IConfiguration _configuration;
         private readonly string _connectionString;
 
         public DapperContex(IConfiguration configuration)
         {
             _configuration = configuration;
-            _connectionString = _configuration.GetConnectionString("SqlConnection");
+            _connectionString = contex;
         }
 
         public IDbConnection Connect()
-            => new Microsoft.Data.SqlClient.SqlConnection(_connectionString);
+            => new SqlConnection(_connectionString);
     }
 }

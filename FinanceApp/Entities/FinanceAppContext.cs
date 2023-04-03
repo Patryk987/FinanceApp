@@ -208,8 +208,9 @@ public partial class FinanceAppContext : DbContext
             entity.ToTable("users");
 
             entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("id");
+                //.ValueGeneratedNever()
+                .HasColumnName("id")
+                .ValueGeneratedOnAddOrUpdate();
             entity.Property(e => e.CreateDate).HasColumnType("datetime");
             entity.Property(e => e.Login).HasMaxLength(50);
             entity.Property(e => e.Name).HasMaxLength(50);

@@ -29,10 +29,10 @@ namespace FinanceApp.Controllers
         {
             var documents = _dbContext
                 .Documents
-               .Include(r => r.DocumentPos)
+               //.Include(r => r.DocumentPos)
                 .ToList();
 
-            var documentDto = _mapper.Map<List<DocumentDTO>>(documents);
+          //  var documentDto = _mapper.Map<List<DocumentDTO>>(documents);
 
             if (documents == null) { return NotFound(); }
             return Ok(documents);
