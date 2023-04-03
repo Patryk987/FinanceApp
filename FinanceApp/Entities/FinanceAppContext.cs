@@ -4,10 +4,15 @@ using FinanceApp.Entities;
 using System.Reflection.Metadata;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.SqlServer.Server;
+using Microsoft.Data.SqlClient;
+using System.Diagnostics.Metrics;
+using System.Runtime.CompilerServices;
+
 namespace FinanceApp.Entities;
 
 public partial class FinanceAppContext : DbContext
 {
+    string contex = File.ReadAllText("c:\\DbContex.txt");
     public FinanceAppContext()
     {
     }
@@ -35,8 +40,9 @@ public partial class FinanceAppContext : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
+    
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlServer("Data Source=ADRIAN\\SQLEXPRESS;Initial Catalog=FinanceApp;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False");
+        => optionsBuilder.UseSqlServer(contex);
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

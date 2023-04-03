@@ -22,39 +22,17 @@ namespace FinanceApp.Controllers
             _dbContext  = dbContext;
             _mapper = mapper;
         }
-        // GET: wszystkich użytkowników
-        [HttpGet("Users")]
-        public ActionResult <IEnumerable<User>> GetAllUser()
-        {
-
-            var users = _dbContext
-                .Users
-                .ToList() ;
-
-            if (users == null) { return NotFound(); }
-            return Ok(users);
-        }
-
-
-        // GET: uzytkownika po loginie
-        [HttpGet("User{login}")]
-        public ActionResult<User> GetByLogin([FromRoute] string login)
-        {            
-            var user = _dbContext.Users.FirstOrDefault(
-                x => x.Login.ToLower() == login.ToLower());
-            if (user == null) { return NotFound(); }
-            return Ok(user);
-        }
+      
         //Get: wszystkich dokumentów
         [HttpGet( "Document")]
         public ActionResult<IEnumerable<DocumentDTO>> GetAllDocuments()
         {
             var documents = _dbContext
                 .Documents
-               // .Include(r => r.DocumentPos)
+               .Include(r => r.DocumentPos)
                 .ToList();
 
-            //var documentDto = _mapper.Map<List<DocumentDTO>>(documents);
+            var documentDto = _mapper.Map<List<DocumentDTO>>(documents);
 
             if (documents == null) { return NotFound(); }
             return Ok(documents);
