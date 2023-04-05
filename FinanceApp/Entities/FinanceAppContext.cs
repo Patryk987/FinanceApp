@@ -12,7 +12,7 @@ namespace FinanceApp.Entities;
 
 public partial class FinanceAppContext : DbContext
 {
-    string contex = File.ReadAllText("D:\\DbContext.txt");
+    string contex = File.ReadAllText("C:\\DbContext.txt");
     public FinanceAppContext()
     {
     }
