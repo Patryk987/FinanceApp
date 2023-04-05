@@ -13,6 +13,7 @@
         public int IdGroup { get; set; }
 
         public string Password { get; set; } = null!;
+      
 
         public DateTime CreateDate { get; set; }
 

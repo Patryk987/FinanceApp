@@ -12,7 +12,7 @@ namespace FinanceApp.Entities;
 
 public partial class FinanceAppContext : DbContext
 {
-    string contex = File.ReadAllText("c:\\DbContex.txt");
+    string contex = File.ReadAllText("D:\\DbContext.txt");
     public FinanceAppContext()
     {
     }
@@ -210,7 +210,7 @@ public partial class FinanceAppContext : DbContext
             entity.Property(e => e.Id)
                 //.ValueGeneratedNever()
                 .HasColumnName("id")
-                .ValueGeneratedOnAddOrUpdate();
+                .ValueGeneratedOnAdd();
             entity.Property(e => e.CreateDate).HasColumnType("datetime");
             entity.Property(e => e.Login).HasMaxLength(50);
             entity.Property(e => e.Name).HasMaxLength(50);

@@ -1,5 +1,11 @@
 global using Microsoft.EntityFrameworkCore;
 using FinanceApp.Entities;
+using FinanceApp.Models;
+using FinanceApp.Models.Validators;
+using FinanceApp.Services;
+using FluentValidation;
+using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 // Aplikacja do zarzadzania finanasami 
@@ -8,12 +14,14 @@ var builder = WebApplication.CreateBuilder(args);
 //****************************************************************************************************
 // Add services to the container.
 
+builder.Services.AddControllers().AddFluentValidation();
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddControllers();   //dodal janek
-
+builder.Services.AddControllers();   
+builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+builder.Services.AddScoped<IValidator<RegisterUserDto>, RegisterUserDtoValidators>();//Wywo³anie walidatora do rejestrowanych u¿ytkowników
 builder.Services.AddDbContext<FinanceAppContext>
     (option => option.UseSqlServer(builder.Configuration.GetConnectionString("FinanceAppDbConnection"))); // <== con do bazy
 
