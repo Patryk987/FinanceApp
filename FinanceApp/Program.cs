@@ -1,4 +1,6 @@
 global using Microsoft.EntityFrameworkCore;
+using System.Text;
+using FinanceApp;
 using FinanceApp.Entities;
 using FinanceApp.Models;
 using FinanceApp.Models.Validators;
@@ -6,6 +8,7 @@ using FinanceApp.Services;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 // Aplikacja do zarzadzania finanasami 
@@ -14,6 +17,30 @@ var builder = WebApplication.CreateBuilder(args);
 //****************************************************************************************************
 // Add services to the container.
 
+//********************************************************************* Fragment dla JWT token ***************************************************************
+var authenticationSettings = new AuthenticationSettings();
+
+builder.Configuration.GetSection("Authentication").Bind(authenticationSettings);    //wpis w pliku appsetings.json
+builder.Services.AddSingleton(authenticationSettings);
+builder.Services.AddAuthentication(option =>
+{
+    option.DefaultAuthenticateScheme = "Bearer";
+    option.DefaultScheme = "Bearer";
+    option.DefaultChallengeScheme = "Bearer";
+
+}).AddJwtBearer(cfg =>
+{
+    cfg.RequireHttpsMetadata = false;
+    cfg.SaveToken = true;
+    cfg.TokenValidationParameters = new TokenValidationParameters()
+    {
+        ValidIssuer = authenticationSettings.JwtIssuer,
+        ValidAudience = authenticationSettings.JwtIssuer,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationSettings.JwtKey))
+
+    };
+});
+//******************************************************************************************************************************8
 builder.Services.AddControllers().AddFluentValidation();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -42,6 +69,7 @@ if (app.Environment.IsDevelopment())
     app.UseDeveloperExceptionPage();
 }
 
+app.UseAuthentication();   //u¿ycie autentykacji JWT
 app.UseHttpsRedirection();
 
 app.UseAuthorization();

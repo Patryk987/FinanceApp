@@ -5,13 +5,22 @@ using Microsoft.AspNetCore.Mvc;
 namespace FinanceApp.Controllers
 {
 
+    //Rejestrowanie użytkownika poprzez:
+    //klasa RegisterUserDto ---- Co ma być zarejestrowane
+    //Klasa RegisterUserDtoValidators  --- Walidacja wprowadzonych danych
+
     [Microsoft.AspNetCore.Components.Route("api/account")]
 
     [Route("api/account")]
     [ApiController]
     public class AccountControler : ControllerBase
     {
-       private readonly IAccountService _accountService;
+
+        //Rejestrowanie użytkownika poprzez:
+        //klasa RegisterUserDto ---- Co ma być zarejestrowane
+        //Klasa RegisterUserDtoValidators  --- Walidacja wprowadzonych danych
+        //***************************************************************************************************
+        private readonly IAccountService _accountService;
 
        public AccountControler(IAccountService accountService)
        {
@@ -23,6 +32,13 @@ namespace FinanceApp.Controllers
        {
            _accountService.RegisterUser(dto);
            return Ok();
+       }
+
+       [HttpPost("login")]
+       public ActionResult Login([FromBody]LoginDto dto )
+       {
+            string token = _accountService.GenerateJwt(dto);
+            return Ok(token);
        }
     }
 }
