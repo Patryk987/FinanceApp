@@ -55,6 +55,17 @@ builder.Services.AddDbContext<FinanceAppContext>
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddSingleton<DapperContex>();
 
+// add corse 
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(builder =>
+    {
+        builder.AllowAnyOrigin()
+               .AllowAnyHeader()
+               .AllowAnyMethod();
+    });
+});
+
 var app = builder.Build();
 
 
@@ -70,11 +81,13 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseAuthentication();   //u¿ycie autentykacji JWT
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseCors();
 
 app.Run();
 
