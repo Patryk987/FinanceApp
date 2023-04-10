@@ -40,5 +40,7 @@ namespace FinanceApp.Controllers
             string token = _accountService.GenerateJwt(dto);
             return Ok(token);
        }
+
+     
     }
 }

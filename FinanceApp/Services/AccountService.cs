@@ -7,6 +7,7 @@ using FinanceApp.Exceptions;
 using FinanceApp.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 
 namespace FinanceApp.Services
 {
@@ -81,7 +82,8 @@ namespace FinanceApp.Services
                signingCredentials: credentials);
 
            var tokenHandler = new JwtSecurityTokenHandler();
-           return tokenHandler.WriteToken(token);
+           var jasonFormat = JsonConvert.DeserializeObject<JwtResponseDto>(u=>u);
+           return jasonFormat; //tokenHandler.WriteToken(token);
         }
     }
 }

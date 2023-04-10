@@ -57,6 +57,10 @@ builder.Services.AddSingleton<DapperContex>();
 
 var app = builder.Build();
 
+builder.Services.AddCors(p => p.AddPolicy("corspolicy", build =>
+{
+    build.WithOrigins("").AllowAnyMethod().AllowAnyMethod();
+}));
 
 
 
