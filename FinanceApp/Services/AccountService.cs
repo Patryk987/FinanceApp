@@ -82,8 +82,7 @@ namespace FinanceApp.Services
                signingCredentials: credentials);
 
            var tokenHandler = new JwtSecurityTokenHandler();
-           var jasonFormat = JsonConvert.DeserializeObject<JwtResponseDto>(u=>u);
-           return jasonFormat; //tokenHandler.WriteToken(token);
+           return tokenHandler.WriteToken(token);
         }
     }
 }

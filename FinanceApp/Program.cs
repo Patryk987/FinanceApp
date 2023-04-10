@@ -75,7 +75,7 @@ if (app.Environment.IsDevelopment())
     app.UseDeveloperExceptionPage();
 }
 
-app.UseCors("corspolicy");
+app.UseCors("corspolicy");    //uzycie policy CORS do odblokowania
 app.UseAuthentication();   //u¿ycie autentykacji JWT
 //app.UseHttpsRedirection();
 
