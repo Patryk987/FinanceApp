@@ -57,9 +57,11 @@ builder.Services.AddSingleton<DapperContex>();
 
 var app = builder.Build();
 
+//**********************************************Odblokowanie policy CORS ************************************************************************
+
 builder.Services.AddCors(p => p.AddPolicy("corspolicy", build =>
 {
-    build.WithOrigins("").AllowAnyMethod().AllowAnyMethod();
+    build.WithOrigins("*").AllowAnyHeader().AllowAnyMethod();
 }));
 
 
@@ -73,8 +75,9 @@ if (app.Environment.IsDevelopment())
     app.UseDeveloperExceptionPage();
 }
 
+app.UseCors("corspolicy");
 app.UseAuthentication();   //u¿ycie autentykacji JWT
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
