@@ -83,7 +83,10 @@ namespace FinanceApp.Services
 
             var tokenHandler = new JwtSecurityTokenHandler();
 
-            var request = new Token { TokenJWT = tokenHandler.WriteToken(token) };
+            var request = new Token {
+                TokenJWT = tokenHandler.WriteToken(token),
+                status = 200 
+            };
 
             var dataToReturn = Newtonsoft.Json.JsonConvert.SerializeObject(request);
             return dataToReturn;
@@ -93,6 +96,7 @@ namespace FinanceApp.Services
     public class Token
     {
         public string TokenJWT { get; set; }
+        public int status { get; set; }
     }
 
     // przykładowe dane
