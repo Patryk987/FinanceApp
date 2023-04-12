@@ -45,24 +45,33 @@ builder.Services.AddControllers().AddFluentValidation();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddControllers();   
+builder.Services.AddControllers();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
-builder.Services.AddScoped<IValidator<RegisterUserDto>, RegisterUserDtoValidators>();//Wywo³anie walidatora do rejestrowanych u¿ytkowników
+builder.Services.AddScoped<IValidator<RegisterUserDto>, RegisterUserDtoValidators>();//Wywoï¿½anie walidatora do rejestrowanych uï¿½ytkownikï¿½w
 builder.Services.AddDbContext<FinanceAppContext>
     (option => option.UseSqlServer(builder.Configuration.GetConnectionString("FinanceAppDbConnection"))); // <== con do bazy
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+builder.WebHost.ConfigureKestrel(options => options.Listen(System.Net.IPAddress.Parse("192.168.0.117"), 5003));
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
 builder.Services.AddSingleton<DapperContex>();
 
-var app = builder.Build();
-
-//**********************************************Odblokowanie policy CORS ************************************************************************
-
-builder.Services.AddCors(p => p.AddPolicy("corspolicy", build =>
+// add corse 
+builder.Services.AddCors(options =>
 {
-    build.WithOrigins("*").AllowAnyHeader().AllowAnyMethod();
-}));
+    options.AddDefaultPolicy(builder =>
+    {
+        builder.AllowAnyOrigin()
+               .AllowAnyHeader()
+               .AllowAnyMethod();
+    });
+});
+
+var app = builder.Build();
 
 
 
@@ -76,12 +85,14 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors("corspolicy");    //uzycie policy CORS do odblokowania
-app.UseAuthentication();   //u¿ycie autentykacji JWT
+app.UseAuthentication();   //uï¿½ycie autentykacji JWT
 //app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseCors();
 
 app.Run();
 

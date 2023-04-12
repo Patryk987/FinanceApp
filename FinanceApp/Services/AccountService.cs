@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.Eventing.Reader;
+﻿using System;
+using System.Diagnostics.Eventing.Reader;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -59,30 +60,46 @@ namespace FinanceApp.Services
                 throw new BadRequestException("Invalid username or password");
             }
 
-           var result= _passwordHasher.VerifyHashedPassword(user, user.Password, dto.Password);
-           if (result == PasswordVerificationResult.Failed)
-           {
-               throw new BadRequestException("Invalid username or password");
-           }
+            var result = _passwordHasher.VerifyHashedPassword(user, user.Password, dto.Password);
+            if (result == PasswordVerificationResult.Failed)
+            {
+                throw new BadRequestException("Invalid username or password");
+            }
 
-           var claims = new List<Claim>()
+            var claims = new List<Claim>()
            {
                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                new Claim(ClaimTypes.Name, $"{user.Name}"),
                new Claim(ClaimTypes.Surname, $"{user.Surname}")
            };
-           var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_authenticationSettings.JwtKey));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_authenticationSettings.JwtKey));
 
-           var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-           var expiresDate = DateTime.Now.AddDays(_authenticationSettings.JwtExpireDays);
-           var token = new JwtSecurityToken(_authenticationSettings.JwtIssuer,
-               _authenticationSettings.JwtIssuer,
-               claims,
-               expires: expiresDate,
-               signingCredentials: credentials);
+            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            var expiresDate = DateTime.Now.AddDays(_authenticationSettings.JwtExpireDays);
+            var token = new JwtSecurityToken(_authenticationSettings.JwtIssuer,
+                _authenticationSettings.JwtIssuer,
+                claims,
+                expires: expiresDate,
+                signingCredentials: credentials);
 
-           var tokenHandler = new JwtSecurityTokenHandler();
-           return tokenHandler.WriteToken(token);
+            var tokenHandler = new JwtSecurityTokenHandler();
+
+            var request = new Token {
+                TokenJWT = tokenHandler.WriteToken(token),
+                status = 200 
+            };
+
+            var dataToReturn = Newtonsoft.Json.JsonConvert.SerializeObject(request);
+            return dataToReturn;
         }
     }
+
+    public class Token
+    {
+        public string TokenJWT { get; set; }
+        public int status { get; set; }
+    }
+
+    // przykładowe dane
+
 }
