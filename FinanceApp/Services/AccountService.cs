@@ -9,6 +9,7 @@ using FinanceApp.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace FinanceApp.Services
 {
@@ -17,7 +18,7 @@ namespace FinanceApp.Services
 
     public interface IAccountService
     {
-        void RegisterUser(RegisterUserDto dto);
+        string RegisterUser(RegisterUserDto dto);
         string GenerateJwt(LoginDto dto);
     }
 
@@ -27,13 +28,15 @@ namespace FinanceApp.Services
         private readonly IPasswordHasher<User> _passwordHasher;
         private readonly AuthenticationSettings _authenticationSettings;
 
-        public AccountService(FinanceAppContext context, IPasswordHasher<User> passwordHasher,AuthenticationSettings authenticationSettings)
+        public AccountService(FinanceAppContext context, IPasswordHasher<User> passwordHasher, AuthenticationSettings authenticationSettings)
         {
             _context = context;
             _passwordHasher = passwordHasher;
             _authenticationSettings = authenticationSettings;
         }
-        public void RegisterUser(RegisterUserDto dto)
+
+        // TODO do zmiany typ obiektu na IActionResult
+        public string RegisterUser(RegisterUserDto dto)
         {
             var user = new User()
             {
@@ -49,6 +52,18 @@ namespace FinanceApp.Services
             user.Password = hashedPassword;
             _context.Users.Add(user);
             _context.SaveChanges();
+
+
+            // TODO: Do zmiany klasa
+            var request = new Token
+            {
+                TokenJWT = "",
+                status = 200
+            };
+
+            var dataToReturn = Newtonsoft.Json.JsonConvert.SerializeObject(request);
+
+            return dataToReturn;
         }
 
         public string GenerateJwt(LoginDto dto)
@@ -84,9 +99,10 @@ namespace FinanceApp.Services
 
             var tokenHandler = new JwtSecurityTokenHandler();
 
-            var request = new Token {
+            var request = new Token
+            {
                 TokenJWT = tokenHandler.WriteToken(token),
-                status = 200 
+                status = 200
             };
 
             var dataToReturn = Newtonsoft.Json.JsonConvert.SerializeObject(request);
@@ -94,6 +110,7 @@ namespace FinanceApp.Services
         }
     }
 
+    // TODO: do stworzenia osobna folder i rozbudowa danych
     public class Token
     {
         public string TokenJWT { get; set; }
