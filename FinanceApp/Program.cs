@@ -1,4 +1,6 @@
 global using Microsoft.EntityFrameworkCore;
+using System.Net;
+using System.Net.Sockets;
 using System.Text;
 using FinanceApp;
 using FinanceApp.Entities;
@@ -8,6 +10,7 @@ using FinanceApp.Services;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -53,17 +56,30 @@ builder.Services.AddDbContext<FinanceAppContext>
     (option => option.UseSqlServer(builder.Configuration.GetConnectionString("FinanceAppDbConnection"))); // <== con do bazy
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+string hostName = Dns.GetHostName();
+
+var addresses = Dns.GetHostEntry((Dns.GetHostName()))
+                    .AddressList
+                    .Where(x => x.AddressFamily == AddressFamily.InterNetwork)
+                    .Select(x => x.ToString())
+                    .ToArray();
+
+builder.WebHost.ConfigureKestrel(options => options.Listen(System.Net.IPAddress.Parse(addresses.ToString()), 5003));
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<DapperContex>();
 
 var app = builder.Build();
 
-//**********************************************Odblokowanie policy CORS ************************************************************************
 
+
+//**********************************************Odblokowanie policy CORS ************************************************************************
+/*
 builder.Services.AddCors(p => p.AddPolicy("corspolicy", build =>
 {
     build.WithOrigins("*").AllowAnyHeader().AllowAnyMethod();
 }));
-
+*/
 
 
 //****************************************************************************************************
