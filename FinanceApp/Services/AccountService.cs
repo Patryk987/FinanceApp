@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.Eventing.Reader;
+﻿using System;
+using System.Diagnostics.Eventing.Reader;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -8,6 +9,7 @@ using FinanceApp.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace FinanceApp.Services
 {
@@ -16,7 +18,7 @@ namespace FinanceApp.Services
 
     public interface IAccountService
     {
-        void RegisterUser(RegisterUserDto dto);
+        string RegisterUser(RegisterUserDto dto);
         string GenerateJwt(LoginDto dto);
     }
 
@@ -26,13 +28,15 @@ namespace FinanceApp.Services
         private readonly IPasswordHasher<User> _passwordHasher;
         private readonly AuthenticationSettings _authenticationSettings;
 
-        public AccountService(FinanceAppContext context, IPasswordHasher<User> passwordHasher,AuthenticationSettings authenticationSettings)
+        public AccountService(FinanceAppContext context, IPasswordHasher<User> passwordHasher, AuthenticationSettings authenticationSettings)
         {
             _context = context;
             _passwordHasher = passwordHasher;
             _authenticationSettings = authenticationSettings;
         }
-        public void RegisterUser(RegisterUserDto dto)
+
+        // TODO do zmiany typ obiektu na IActionResult
+        public string RegisterUser(RegisterUserDto dto)
         {
             var user = new User()
             {
@@ -48,6 +52,18 @@ namespace FinanceApp.Services
             user.Password = hashedPassword;
             _context.Users.Add(user);
             _context.SaveChanges();
+
+
+            // TODO: Do zmiany klasa
+            var request = new Token
+            {
+                TokenJWT = "",
+                status = 200
+            };
+
+            var dataToReturn = Newtonsoft.Json.JsonConvert.SerializeObject(request);
+
+            return dataToReturn;
         }
 
         public string GenerateJwt(LoginDto dto)
@@ -59,30 +75,48 @@ namespace FinanceApp.Services
                 throw new BadRequestException("Invalid username or password");
             }
 
-           var result= _passwordHasher.VerifyHashedPassword(user, user.Password, dto.Password);
-           if (result == PasswordVerificationResult.Failed)
-           {
-               throw new BadRequestException("Invalid username or password");
-           }
+            var result = _passwordHasher.VerifyHashedPassword(user, user.Password, dto.Password);
+            if (result == PasswordVerificationResult.Failed)
+            {
+                throw new BadRequestException("Invalid username or password");
+            }
 
-           var claims = new List<Claim>()
+            var claims = new List<Claim>()
            {
                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                new Claim(ClaimTypes.Name, $"{user.Name}"),
                new Claim(ClaimTypes.Surname, $"{user.Surname}")
            };
-           var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_authenticationSettings.JwtKey));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_authenticationSettings.JwtKey));
 
-           var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-           var expiresDate = DateTime.Now.AddDays(_authenticationSettings.JwtExpireDays);
-           var token = new JwtSecurityToken(_authenticationSettings.JwtIssuer,
-               _authenticationSettings.JwtIssuer,
-               claims,
-               expires: expiresDate,
-               signingCredentials: credentials);
+            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            var expiresDate = DateTime.Now.AddDays(_authenticationSettings.JwtExpireDays);
+            var token = new JwtSecurityToken(_authenticationSettings.JwtIssuer,
+                _authenticationSettings.JwtIssuer,
+                claims,
+                expires: expiresDate,
+                signingCredentials: credentials);
 
-           var tokenHandler = new JwtSecurityTokenHandler();
-           return tokenHandler.WriteToken(token);
+            var tokenHandler = new JwtSecurityTokenHandler();
+
+            var request = new Token
+            {
+                TokenJWT = tokenHandler.WriteToken(token),
+                status = 200
+            };
+
+            var dataToReturn = Newtonsoft.Json.JsonConvert.SerializeObject(request);
+            return dataToReturn;
         }
     }
+
+    // TODO: do stworzenia osobna folder i rozbudowa danych
+    public class Token
+    {
+        public string TokenJWT { get; set; }
+        public int status { get; set; }
+    }
+
+    // przykładowe dane
+
 }

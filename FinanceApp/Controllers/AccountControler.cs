@@ -22,25 +22,25 @@ namespace FinanceApp.Controllers
         //***************************************************************************************************
         private readonly IAccountService _accountService;
 
-       public AccountControler(IAccountService accountService)
-       {
-           _accountService = accountService;
-       }
+        public AccountControler(IAccountService accountService)
+        {
+            _accountService = accountService;
+        }
 
-       [HttpPost("register")]
-       public ActionResult RegisterUer([FromBody] RegisterUserDto dto)
-       {
-           _accountService.RegisterUser(dto);
-           return Ok();
-       }
+        [HttpPost("register")]
+        public ActionResult RegisterUer([FromBody] RegisterUserDto dto)
+        {
+            string data = _accountService.RegisterUser(dto);
+            return Ok(data);
+        }
 
-       [HttpPost("login")]
-       public ActionResult Login([FromBody]LoginDto dto )
-       {
+        [HttpPost("login")]
+        public ActionResult Login([FromBody] LoginDto dto)
+        {
             string token = _accountService.GenerateJwt(dto);
             return Ok(token);
-       }
+        }
 
-     
+
     }
 }
