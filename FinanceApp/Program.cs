@@ -56,52 +56,55 @@ builder.Services.AddDbContext<FinanceAppContext>
     (option => option.UseSqlServer(builder.Configuration.GetConnectionString("FinanceAppDbConnection"))); // <== con do bazy
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-string hostName = Dns.GetHostName();
 
+string hostName = Dns.GetHostName();
 var addresses = Dns.GetHostEntry((Dns.GetHostName()))
                     .AddressList
                     .Where(x => x.AddressFamily == AddressFamily.InterNetwork)
                     .Select(x => x.ToString())
                     .ToArray();
 
-builder.WebHost.ConfigureKestrel(options => options.Listen(System.Net.IPAddress.Parse(addresses.ToString()), 5003));
+
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<DapperContex>();
-
-builder.WebHost.ConfigureKestrel(options => options.Listen(System.Net.IPAddress.Parse("192.168.0.117"), 5003));
+//builder.WebHost.ConfigureKestrel(options => options.Listen(System.Net.IPAddress.Parse(addresses.ToString()), 5003));
+builder.WebHost.ConfigureKestrel(options => options.Listen(System.Net.IPAddress.Parse("192.168.1.21"), 5003));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-//**********************************************Odblokowanie policy CORS ************************************************************************
+///*
+// * ********************************************Odblokowanie policy CORS ************************************************************************
 
-builder.Services.AddCors(p => p.AddPolicy("corspolicy", build =>
-{
-    build.WithOrigins("*").AllowAnyHeader().AllowAnyMethod();
-}));
+//builder.Services.AddCors(p => p.AddPolicy("corspolicy", build =>
+//{
+//    build.WithOrigins("*").AllowAnyHeader().AllowAnyMethod();
+//}));
 
 
 
 //****************************************************************************************************
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-    app.UseDeveloperExceptionPage();
-}
+///*
+//if (app.Environment.IsDevelopment())
+//{
+//    app.UseSwagger();
+//    app.UseSwaggerUI();
+//    app.UseDeveloperExceptionPage();
+//}
 
-app.UseCors("corspolicy");    //uzycie policy CORS do odblokowania
-app.UseAuthentication();   //u�ycie autentykacji JWT
+//app.UseCors("corspolicy");    //uzycie policy CORS do odblokowania
+//app.UseAuthentication();   //u�ycie autentykacji JWT
 //app.UseHttpsRedirection();
 
-app.UseAuthorization();
+//app.UseAuthorization();
 
-app.MapControllers();
+//app.MapControllers();
 
-app.UseCors();
+//app.UseCors();
 
-app.Run();
+//app.Run();
 
 //test adrian
 //komentarz Janek
