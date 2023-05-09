@@ -69,10 +69,12 @@ var addresses = Dns.GetHostEntry((Dns.GetHostName()))
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<DapperContex>();
-//builder.WebHost.ConfigureKestrel(options => options.Listen(System.Net.IPAddress.Parse(addresses.ToString()), 5003));
-builder.WebHost.ConfigureKestrel(options => options.Listen(System.Net.IPAddress.Parse("192.168.1.21"), 5003));
+
+builder.WebHost.ConfigureKestrel(options => options.Listen(System.Net.IPAddress.Parse(addresses.FirstOrDefault().ToString()), 5003));
+//builder.WebHost.ConfigureKestrel(options => options.Listen(System.Net.IPAddress.Parse("10.10.60.159"), 5003));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+var app = builder.Build();
 
 ///*
 // * ********************************************Odblokowanie policy CORS ************************************************************************
@@ -86,25 +88,25 @@ builder.Services.AddSwaggerGen();
 
 //****************************************************************************************************
 // Configure the HTTP request pipeline.
-///*
-//if (app.Environment.IsDevelopment())
-//{
-//    app.UseSwagger();
-//    app.UseSwaggerUI();
-//    app.UseDeveloperExceptionPage();
-//}
 
-//app.UseCors("corspolicy");    //uzycie policy CORS do odblokowania
-//app.UseAuthentication();   //u�ycie autentykacji JWT
-//app.UseHttpsRedirection();
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+    app.UseDeveloperExceptionPage();
+}
 
-//app.UseAuthorization();
+app.UseCors("corspolicy");    //uzycie policy CORS do odblokowania
+app.UseAuthentication();   //u�ycie autentykacji JWT
+app.UseHttpsRedirection();
 
-//app.MapControllers();
+app.UseAuthorization();
 
-//app.UseCors();
+app.MapControllers();
 
-//app.Run();
+app.UseCors();
+
+app.Run();
 
 //test adrian
 //komentarz Janek
