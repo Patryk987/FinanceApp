@@ -17,6 +17,8 @@ namespace FinanceApp.Entities
         public decimal AmountWal { get; set; }
 
         public string Waluta { get; set; } = null!;
+
+        public DateTime paymentsDate { get; set; }
         public virtual ICollection<Saving> Savings { get; } = new List<Saving>();
 
         public virtual User User { get; set; } = null!;

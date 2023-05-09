@@ -137,6 +137,9 @@ public partial class FinanceAppContext : DbContext
             entity.Property(e => e.Waluta)
                 .HasMaxLength(3)
                 .HasColumnName("waluta");
+            entity.Property(e => e.paymentsDate)
+                .HasColumnType("date")
+                .HasColumnName("paymentsDate");
 
             entity.HasOne(d => d.User).WithMany(p => p.Payments)
                 .HasForeignKey(d => d.UserId)
