@@ -59,10 +59,10 @@ var app = builder.Build();
 
 //**********************************************Odblokowanie policy CORS ************************************************************************
 
-builder.Services.AddCors(p => p.AddPolicy("corspolicy", build =>
-{
-    build.WithOrigins("*").AllowAnyHeader().AllowAnyMethod();
-}));
+// builder.Services.AddCors(p => p.AddPolicy("corspolicy", build =>
+// {
+//     build.WithOrigins("*").AllowAnyHeader().AllowAnyMethod();
+// }));
 
 
 
@@ -75,7 +75,7 @@ if (app.Environment.IsDevelopment())
     app.UseDeveloperExceptionPage();
 }
 
-app.UseCors("corspolicy");    //uzycie policy CORS do odblokowania
+// app.UseCors("corspolicy");    //uzycie policy CORS do odblokowania
 app.UseAuthentication();   //u¿ycie autentykacji JWT
 //app.UseHttpsRedirection();
 
