@@ -62,33 +62,6 @@ namespace FinanceApp.Controllers
                 return Ok(x);
             }
         }
-
-        //To do wywalenia nie potrzebne, jest rejestrowanie użytkowników w Controllers jako AccountControler
-        //Adrian Sprawdź i oceń 
-//*************************************************************************************************************************
-        ////dodawanie uzytkownika
-        //[HttpPost]
-        //public ActionResult CreateUser([FromBody] User user)
-        //{
-        //    var sql = "INSERT INTO [dbo].[users]([Login],[Name],[Surname],[IdGroup],[password],[CreateDate])" +
-        //              "Values (@Login,@Name,@Surname,@IdGroup,@password,@CreateDate)";
-
-        //    var parameters = new DynamicParameters();
-        //    parameters.Add("Login", user.Login);
-        //    parameters.Add("password", user.Password);
-        //    parameters.Add("Name", user.Name);
-        //    parameters.Add("Surname", user.Surname);
-        //    parameters.Add("IdGroup", user.IdGroup);
-        //    parameters.Add("CreateDate", DateTime.Now);
-
-        //    using (var sqlcon = _dapperContex.Connect())
-        //    {
-        //        var exec = sqlcon.Execute(sql, parameters);
-        //        return Created($"api/financeApp/User/{user.Login}", null);
-        //    }
-
-        //}
-        //*********************************************************************************************************************
     }
 
 
