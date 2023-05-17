@@ -50,6 +50,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<JwtHelper>();
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 builder.Services.AddScoped<IValidator<RegisterUserDto>, RegisterUserDtoValidators>();//Wywoï¿½anie walidatora do rejestrowanych uï¿½ytkownikï¿½w
 builder.Services.AddDbContext<FinanceAppContext>
@@ -76,23 +77,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
-///*
-// * ********************************************Odblokowanie policy CORS ************************************************************************
-
-<<<<<<< HEAD
-// builder.Services.AddCors(p => p.AddPolicy("corspolicy", build =>
-// {
-//     build.WithOrigins("*").AllowAnyHeader().AllowAnyMethod();
-// }));
-=======
-//builder.Services.AddCors(p => p.AddPolicy("corspolicy", build =>
-//{
-//    build.WithOrigins("*").AllowAnyHeader().AllowAnyMethod();
-//}));
->>>>>>> ccb7c208fee1284d51add97e9aa1474bffbfdaac
-
-
-
 //****************************************************************************************************
 // Configure the HTTP request pipeline.
 
@@ -103,15 +87,7 @@ if (app.Environment.IsDevelopment())
     app.UseDeveloperExceptionPage();
 }
 
-<<<<<<< HEAD
-// app.UseCors("corspolicy");    //uzycie policy CORS do odblokowania
-app.UseAuthentication();   //u¿ycie autentykacji JWT
-//app.UseHttpsRedirection();
-=======
-app.UseCors("corspolicy");    //uzycie policy CORS do odblokowania
 app.UseAuthentication();   //uï¿½ycie autentykacji JWT
-app.UseHttpsRedirection();
->>>>>>> ccb7c208fee1284d51add97e9aa1474bffbfdaac
 
 app.UseAuthorization();
 

@@ -2,13 +2,13 @@
 
 namespace FinanceApp.Middleware
 {
-    public class ErrorHandlingMiddleware:IMiddleware
+    public class ErrorHandlingMiddleware : IMiddleware
     {
         private readonly ILogger _logger;
 
         public ErrorHandlingMiddleware(ILogger logger)
         {
-            _logger= logger;
+            _logger = logger;
         }
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
@@ -23,12 +23,6 @@ namespace FinanceApp.Middleware
                 await context.Response.WriteAsync(badRequestException.Message);
 
             }
-
-         
-
-
-
-
 
         }
     }

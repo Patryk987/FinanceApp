@@ -1,30 +1,36 @@
 ﻿using AutoMapper;
 using Dapper;
 using FinanceApp.Entities;
+using FinanceApp.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FinanceApp.Controllers
 {
-    [Route("api/financeApp")]
+
+    [Microsoft.AspNetCore.Components.Route("api/payments")]
+    [Route("api/payments")]
     [ApiController]
+
     public class PaymentsController : Controller
 
     {
         private readonly DapperContex _dapperContex;
         private readonly FinanceAppContext _dbContext;
         private readonly IMapper _mapper;
+        private JwtHelper _jwt;
 
-        public PaymentsController(FinanceAppContext dbContext, IMapper mapper, DapperContex DapperContex)
+        public PaymentsController(FinanceAppContext dbContext, IMapper mapper, DapperContex DapperContex, JwtHelper jwt)
         {
             _dbContext = dbContext;
             _mapper = mapper;
             _dapperContex = DapperContex;
+            _jwt = jwt;
         }
         [HttpGet("All")]
         public ActionResult<IEnumerable<Payment>> GetAll()
         {
-            var sql = " select * from dbo.Payments where typeOfPayments = 1";
+            var sql = "select * from dbo.Payments where typeOfPayments = 1";
             using (var sqlcon = _dapperContex.Connect())
             {
                 var x = sqlcon.Query(sql).ToList();
@@ -39,7 +45,7 @@ namespace FinanceApp.Controllers
         [HttpGet("AllSavings")]
         public ActionResult<IEnumerable<Payment>> GetAllSavings()
         {
-            var sql = " select * from dbo.Payments where typeOfPayments = 2";
+            var sql = "select * from dbo.Payments where typeOfPayments = 2";
             using (var sqlcon = _dapperContex.Connect())
             {
                 var x = sqlcon.Query(sql).ToList();
@@ -55,7 +61,7 @@ namespace FinanceApp.Controllers
         [HttpGet("Balance")]
         public ActionResult<IEnumerable<Payment>> GetBalance()
         {
-            var sql = " select sum([amountPLN]) from dbo.Payments where typeOfPayments = 1";
+            var sql = "select sum([amountPLN]) from dbo.Payments where typeOfPayments = 1";
             using (var sqlcon = _dapperContex.Connect())
             {
                 var x = sqlcon.Query(sql).ToList();
@@ -67,10 +73,11 @@ namespace FinanceApp.Controllers
                 return Ok(x);
             }
         }
-        [HttpGet("Savings Balance")]
+        [HttpGet("SavingsBalance")]
         public ActionResult<IEnumerable<Payment>> GetSavingsBalance()
         {
-            var sql = " select sum([amountPLN]) from dbo.Payments where typeOfPayments = 2";
+
+            var sql = "select sum([amountPLN]) from dbo.Payments where typeOfPayments = 2";
             using (var sqlcon = _dapperContex.Connect())
             {
                 var x = sqlcon.Query(sql).ToList();
@@ -85,11 +92,20 @@ namespace FinanceApp.Controllers
 
         // POST: Payments/Create
 
-        [HttpPost]
+        [HttpPost("insert")]
         public ActionResult InsertPaymants([FromBody] Payment payment)
         {
-            var sql = "INSERT INTO [dbo].[[Payments]]([name],[amountPLN],[typeOfPayments],[UserId],[amountWal],[waluta],[paymentsDate])" +
-                      "Values (@name,@amountPLN,@typeOfPayments,@UserId,@amountWal,@waluta,@paymentsDate)";
+            HttpContext.Request.Headers.TryGetValue("token", out var headerValueToken);
+            var valid = _jwt.ValidateToken(headerValueToken);
+            Console.WriteLine(valid);
+
+            // var decode = _jwt.DecodeToken(headerValueToken);
+            // Console.WriteLine(decode);
+            // var sql = "INSERT INTO [dbo].[Payments]([name],[amountPLN],[typeOfPayments],[UserId],[amountWal],[waluta],[paymentsDate])" +
+            // "Values (@name,@amountPLN,@typeOfPayments,@UserId,@amountWal,@waluta,@paymentsDate)";
+
+            var sql = "INSERT INTO [dbo].[Payments]([name],[amountPLN],[typeOfPayments],[UserId],[amountWal],[waluta])" +
+                      "Values (@name,@amountPLN,@typeOfPayments,@UserId,@amountWal,@waluta)";
 
             var parameters = new DynamicParameters();
             parameters.Add("name", payment.Name);
@@ -98,20 +114,23 @@ namespace FinanceApp.Controllers
             parameters.Add("UserId", payment.UserId);
             parameters.Add("amountWal", payment.AmountWal);
             parameters.Add("waluta", payment.Waluta);
-            parameters.Add("paymentsDate", DateTime.Now);
+            //parameters.Add("paymentsDate", DateTime.Now);
 
             using (var sqlcon = _dapperContex.Connect())
             {
                 var exec = sqlcon.Execute(sql, parameters);
-                return Created($"api/financeApp/payment/{payment.Name}", null);
+                return Ok(exec);
+                // Console.WriteLine(exec);
+                // return Created($"api/financeApp/payment/{payment.Name}", null);
             }
 
         }
 
         // GET: Payments/Delete/5
+        [HttpDelete("delete")]
         public ActionResult Delete(int id)
         {
-            var sql = "DELETE FROM [dbo].[Payments] WHERE ID =@id";
+            var sql = "DELETE FROM [dbo].[Payments] WHERE ID = @id";
 
             var parameters = new DynamicParameters();
             parameters.Add("id", id);
