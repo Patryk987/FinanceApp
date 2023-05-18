@@ -19,7 +19,7 @@ namespace FinanceApp.Services
 
         public bool ValidateToken(string token)
         {
-
+            Console.WriteLine(token);
             var tokenHandler = new JwtSecurityTokenHandler();
             var validationParameters = GetValidationParameters();
 
@@ -39,7 +39,13 @@ namespace FinanceApp.Services
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var jwtToken = tokenHandler.ReadJwtToken(token);
-            return jwtToken.ToString();
+
+            // List<string> jwtData = new List<string>();
+            // jwtData.Add(jwtToken.id);
+            // TODO: Poprawić na bezpośrednie pobieranie id
+            string id = jwtToken.Claims.First().Value;
+
+            return id;
         }
 
         private TokenValidationParameters GetValidationParameters()
