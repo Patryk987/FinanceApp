@@ -1,117 +1,206 @@
 ﻿using AutoMapper;
 using Dapper;
 using FinanceApp.Entities;
+using FinanceApp.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FinanceApp.Controllers
 {
-    [Route("api/financeApp")]
+
+    [Microsoft.AspNetCore.Components.Route("api/payments")]
+    [Route("api/payments")]
     [ApiController]
+
     public class PaymentsController : Controller
 
     {
         private readonly DapperContex _dapperContex;
         private readonly FinanceAppContext _dbContext;
         private readonly IMapper _mapper;
+        private JwtHelper _jwt;
 
-        public PaymentsController(FinanceAppContext dbContext, IMapper mapper, DapperContex DapperContex)
+        public PaymentsController(FinanceAppContext dbContext, IMapper mapper, DapperContex DapperContex, JwtHelper jwt)
         {
             _dbContext = dbContext;
             _mapper = mapper;
             _dapperContex = DapperContex;
+            _jwt = jwt;
         }
         [HttpGet("All")]
         public ActionResult<IEnumerable<Payment>> GetAll()
         {
-            var sql = " select * from dbo.Payments where typeOfPayments = 1";
-            using (var sqlcon = _dapperContex.Connect())
+
+            HttpContext.Request.Headers.TryGetValue("token", out var headerValueToken);
+            var valid = _jwt.ValidateToken(headerValueToken);
+            Console.WriteLine(valid);
+
+            if (valid)
             {
-                var x = sqlcon.Query(sql).ToList();
-                if (x == null)
+                var decode = _jwt.DecodeToken(headerValueToken);
+
+                var parameters = new DynamicParameters();
+                parameters.Add("UserId", decode);
+
+                var sql = "select * from dbo.Payments where typeOfPayments = 1 AND UserId = @UserId";
+                using (var sqlcon = _dapperContex.Connect())
                 {
-                    return NotFound();
+                    var x = sqlcon.Query(sql, parameters).ToList();
+                    if (x == null)
+                    {
+                        return NotFound();
+                    }
+
+                    return Ok(x);
                 }
 
-                return Ok(x);
             }
+            else return Ok();
         }
         [HttpGet("AllSavings")]
         public ActionResult<IEnumerable<Payment>> GetAllSavings()
         {
-            var sql = " select * from dbo.Payments where typeOfPayments = 2";
-            using (var sqlcon = _dapperContex.Connect())
+
+            HttpContext.Request.Headers.TryGetValue("token", out var headerValueToken);
+            var valid = _jwt.ValidateToken(headerValueToken);
+            Console.WriteLine(valid);
+
+            if (valid)
             {
-                var x = sqlcon.Query(sql).ToList();
-                if (x == null)
+                var decode = _jwt.DecodeToken(headerValueToken);
+
+                var parameters = new DynamicParameters();
+                parameters.Add("UserId", decode);
+
+                var sql = "select * from dbo.Payments where typeOfPayments = 2 AND UserId = @UserId";
+                using (var sqlcon = _dapperContex.Connect())
                 {
-                    return NotFound();
+                    var x = sqlcon.Query(sql, parameters).ToList();
+                    if (x == null)
+                    {
+                        return NotFound();
+                    }
+
+                    return Ok(x);
                 }
 
-                return Ok(x);
             }
+            else return Ok();
         }
 
         [HttpGet("Balance")]
         public ActionResult<IEnumerable<Payment>> GetBalance()
         {
-            var sql = " select sum([amountPLN]) from dbo.Payments where typeOfPayments = 1";
-            using (var sqlcon = _dapperContex.Connect())
+
+
+            HttpContext.Request.Headers.TryGetValue("token", out var headerValueToken);
+            var valid = _jwt.ValidateToken(headerValueToken);
+            Console.WriteLine(valid);
+
+            if (valid)
             {
-                var x = sqlcon.Query(sql).ToList();
-                if (x == null)
+                var decode = _jwt.DecodeToken(headerValueToken);
+
+                var parameters = new DynamicParameters();
+                parameters.Add("UserId", decode);
+
+                var sql = "select sum([amountPLN]) as amountPLN from dbo.Payments where typeOfPayments = 1 AND UserId = @UserId";
+                using (var sqlcon = _dapperContex.Connect())
                 {
-                    return NotFound();
+                    var x = sqlcon.Query(sql, parameters).ToList();
+                    if (x == null)
+                    {
+                        return NotFound();
+                    }
+
+                    return Ok(x);
                 }
 
-                return Ok(x);
             }
+            else return Ok();
+
         }
-        [HttpGet("Savings Balance")]
+        [HttpGet("SavingsBalance")]
         public ActionResult<IEnumerable<Payment>> GetSavingsBalance()
         {
-            var sql = " select sum([amountPLN]) from dbo.Payments where typeOfPayments = 2";
-            using (var sqlcon = _dapperContex.Connect())
+
+            HttpContext.Request.Headers.TryGetValue("token", out var headerValueToken);
+            var valid = _jwt.ValidateToken(headerValueToken);
+            Console.WriteLine(valid);
+
+            if (valid)
             {
-                var x = sqlcon.Query(sql).ToList();
-                if (x == null)
+                var decode = _jwt.DecodeToken(headerValueToken);
+
+                var parameters = new DynamicParameters();
+                parameters.Add("UserId", decode);
+
+
+                var sql = "select sum([amountPLN]) from dbo.Payments where typeOfPayments = 2 AND UserId = @UserId";
+                using (var sqlcon = _dapperContex.Connect())
                 {
-                    return NotFound();
+                    var x = sqlcon.Query(sql, parameters).ToList();
+                    if (x == null)
+                    {
+                        return NotFound();
+                    }
+
+                    return Ok(x);
                 }
 
-                return Ok(x);
             }
+            else return Ok();
+
+
         }
 
         // POST: Payments/Create
 
-        [HttpPost]
+        [HttpPost("insert")]
         public ActionResult InsertPaymants([FromBody] Payment payment)
         {
-            var sql = "INSERT INTO [dbo].[[Payments]]([name],[amountPLN],[typeOfPayments],[UserId],[amountWal],[waluta],[paymentsDate])" +
-                      "Values (@name,@amountPLN,@typeOfPayments,@UserId,@amountWal,@waluta,@paymentsDate)";
+            HttpContext.Request.Headers.TryGetValue("token", out var headerValueToken);
+            var valid = _jwt.ValidateToken(headerValueToken);
+            Console.WriteLine(valid);
 
-            var parameters = new DynamicParameters();
-            parameters.Add("name", payment.Name);
-            parameters.Add("amountPLN", payment.AmountPln);
-            parameters.Add("typeOfPayments", payment.TypeOfPayments);
-            parameters.Add("UserId", payment.UserId);
-            parameters.Add("amountWal", payment.AmountWal);
-            parameters.Add("waluta", payment.Waluta);
-            parameters.Add("paymentsDate", DateTime.Now);
-
-            using (var sqlcon = _dapperContex.Connect())
+            if (valid)
             {
-                var exec = sqlcon.Execute(sql, parameters);
-                return Created($"api/financeApp/payment/{payment.Name}", null);
+                var decode = _jwt.DecodeToken(headerValueToken);
+                Console.WriteLine(decode);
+
+                var sql = "INSERT INTO [dbo].[Payments]([name],[amountPLN],[typeOfPayments],[UserId],[amountWal],[waluta],[paymentsDate])" +
+                "Values (@name,@amountPLN,@typeOfPayments,@UserId,@amountWal,@waluta,@paymentsDate)";
+
+                var parameters = new DynamicParameters();
+                parameters.Add("name", payment.Name);
+                parameters.Add("amountPLN", payment.AmountPln);
+                parameters.Add("typeOfPayments", payment.TypeOfPayments);
+                parameters.Add("UserId", decode);
+                parameters.Add("amountWal", payment.AmountWal);
+                parameters.Add("waluta", payment.Waluta);
+                parameters.Add("paymentsDate", DateTime.Now);
+
+                using (var sqlcon = _dapperContex.Connect())
+                {
+                    var exec = sqlcon.Execute(sql, parameters);
+                    return Ok(exec);
+                    // Console.WriteLine(exec);
+                    // return Created($"api/financeApp/payment/{payment.Name}", null);
+                }
             }
+            else
+            {
+                return Ok();
+            }
+
 
         }
 
         // GET: Payments/Delete/5
+        [HttpDelete("delete")]
         public ActionResult Delete(int id)
         {
-            var sql = "DELETE FROM [dbo].[Payments] WHERE ID =@id";
+            var sql = "DELETE FROM [dbo].[Payments] WHERE ID = @id";
 
             var parameters = new DynamicParameters();
             parameters.Add("id", id);

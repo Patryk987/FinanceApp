@@ -50,6 +50,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<JwtHelper>();
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 builder.Services.AddScoped<IValidator<RegisterUserDto>, RegisterUserDtoValidators>();//Wywo�anie walidatora do rejestrowanych u�ytkownik�w
 builder.Services.AddDbContext<FinanceAppContext>
@@ -76,6 +77,12 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
+<<<<<<< HEAD
+=======
+//****************************************************************************************************
+// Configure the HTTP request pipeline.
+
+>>>>>>> aa8fd1e45d7608cb091c31d565f5e805c223d46d
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -83,11 +90,15 @@ if (app.Environment.IsDevelopment())
     app.UseDeveloperExceptionPage();
 }
 
+<<<<<<< HEAD
 
 app.UseCors("corspolicy");    //uzycie policy CORS do odblokowania
 app.UseAuthentication();   
 app.UseHttpsRedirection();
 
+=======
+app.UseAuthentication();   //u�ycie autentykacji JWT
+>>>>>>> aa8fd1e45d7608cb091c31d565f5e805c223d46d
 
 app.UseAuthorization();
 

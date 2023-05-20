@@ -53,7 +53,7 @@ namespace FinanceApp.Controllers
             var sql = $"SELECT login FROM Users WHERE login = '{login}'";
             using (var sqlcon = _dapperContex.Connect())
             {
-                var x = sqlcon.QuerySingleOrDefault(sql);
+                var x = sqlcon.QuerySingleOrDefault(sql).ToList();
                 if (x == null)
                 {
                     return NotFound();
@@ -65,7 +65,7 @@ namespace FinanceApp.Controllers
 
         //To do wywalenia nie potrzebne, jest rejestrowanie użytkowników w Controllers jako AccountControler
         //Adrian Sprawdź i oceń 
-//*************************************************************************************************************************
+        //*************************************************************************************************************************
         ////dodawanie uzytkownika
         //[HttpPost]
         //public ActionResult CreateUser([FromBody] User user)

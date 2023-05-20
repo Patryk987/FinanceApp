@@ -21,6 +21,6 @@ namespace FinanceApp.Entities
         public DateTime paymentsDate { get; set; }
         public virtual ICollection<Saving> Savings { get; } = new List<Saving>();
 
-        public virtual User User { get; set; } = null!;
+        public virtual User? User { get; set; } = null!;
     }
 }
