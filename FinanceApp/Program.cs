@@ -76,26 +76,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
-///*
-// * ********************************************Odblokowanie policy CORS ************************************************************************
-
-<<<<<<< HEAD
-// builder.Services.AddCors(p => p.AddPolicy("corspolicy", build =>
-// {
-//     build.WithOrigins("*").AllowAnyHeader().AllowAnyMethod();
-// }));
-=======
-//builder.Services.AddCors(p => p.AddPolicy("corspolicy", build =>
-//{
-//    build.WithOrigins("*").AllowAnyHeader().AllowAnyMethod();
-//}));
->>>>>>> ccb7c208fee1284d51add97e9aa1474bffbfdaac
-
-
-
-//****************************************************************************************************
-// Configure the HTTP request pipeline.
-
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -103,15 +83,11 @@ if (app.Environment.IsDevelopment())
     app.UseDeveloperExceptionPage();
 }
 
-<<<<<<< HEAD
-// app.UseCors("corspolicy");    //uzycie policy CORS do odblokowania
-app.UseAuthentication();   //u¿ycie autentykacji JWT
-//app.UseHttpsRedirection();
-=======
+
 app.UseCors("corspolicy");    //uzycie policy CORS do odblokowania
-app.UseAuthentication();   //uï¿½ycie autentykacji JWT
+app.UseAuthentication();   
 app.UseHttpsRedirection();
->>>>>>> ccb7c208fee1284d51add97e9aa1474bffbfdaac
+
 
 app.UseAuthorization();
 
