@@ -168,12 +168,24 @@ namespace FinanceApp.Controllers
                 var decode = _jwt.DecodeToken(headerValueToken);
                 Console.WriteLine(decode);
 
+                decimal AmountPln;
+
+                if (payment.Waluta == "PLN")
+                {
+                    AmountPln = payment.AmountWal;
+                }
+                else
+                {
+                    AmountPln = ConvertCurrencyToPln.GetConvertPrice(payment.Waluta, payment.AmountWal);
+                }
+
+
                 var sql = "INSERT INTO [dbo].[Payments]([name],[amountPLN],[typeOfPayments],[UserId],[amountWal],[waluta],[paymentsDate])" +
                 "Values (@name,@amountPLN,@typeOfPayments,@UserId,@amountWal,@waluta,@paymentsDate)";
 
                 var parameters = new DynamicParameters();
                 parameters.Add("name", payment.Name);
-                parameters.Add("amountPLN", payment.AmountPln);
+                parameters.Add("amountPLN", AmountPln);
                 parameters.Add("typeOfPayments", payment.TypeOfPayments);
                 parameters.Add("UserId", decode);
                 parameters.Add("amountWal", payment.AmountWal);
