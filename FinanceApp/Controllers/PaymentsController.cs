@@ -196,8 +196,6 @@ namespace FinanceApp.Controllers
                 {
                     var exec = sqlcon.Execute(sql, parameters);
                     return Ok(exec);
-                    // Console.WriteLine(exec);
-                    // return Created($"api/financeApp/payment/{payment.Name}", null);
                 }
             }
             else
