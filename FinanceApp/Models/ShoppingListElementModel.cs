@@ -4,13 +4,13 @@ namespace FinanceApp.Models
 {
     public class ShoppingListElementModel : Controller
     {
-        public string Id { get; set; }
+        public int? Id { get; set; }
 
-        public string ShoppingListId { get; set; }
-    
-        public string ProductsName { get; set; }
+        public int ListId { get; set; }
 
-        public int ProductsCount { get; set; }
+        public string ProductName { get; set; }
+
+        public bool? Status { get; set; }
 
     }
 }
