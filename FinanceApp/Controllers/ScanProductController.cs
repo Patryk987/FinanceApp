@@ -6,7 +6,10 @@ using FinanceApp.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Data;
 using System.Net.Http;
+using System.Security.Cryptography;
+using System.Text.RegularExpressions;
 
 namespace FinanceApp.Controllers
 {
@@ -34,7 +37,17 @@ namespace FinanceApp.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<ProductDTO>> CheckProduct(string ean)
         {
-            var results = this.ProductInfo(ean);
+
+            var productPrice = this.getProductPrice(ean);
+            var productInfo = this.ProductInfo(ean);
+
+            ProductDTO results = new ProductDTO {
+                Name = productInfo.Name,
+                Barcode = productInfo.Barcode,
+                ImageUrl = productInfo.ImageUrl,
+                ProductPrice = productPrice
+            };
+
 
             return Ok(results);
         }
@@ -174,5 +187,35 @@ namespace FinanceApp.Controllers
             }
         }
 
+        private List<ProductPriceModel> getProductPrice(string ean)
+        {
+
+
+            List<ProductPriceModel> results = new List<ProductPriceModel>(); ;
+
+
+            var parameters = new DynamicParameters();
+            parameters.Add("barcode", ean);
+
+            var sql = "SELECT MONTH(date) AS month, YEAR(date) AS year, AVG(price) AS avg_price FROM dbo.ProductPrice WHERE barcode = @barcode GROUP BY MONTH(date), YEAR(date)";
+            using (var sqlcon = _dapperContex.Connect())
+            {
+                var data = sqlcon.Query(sql, parameters).ToList();
+
+                foreach (var items in data)
+                {
+                    results.Add(new ProductPriceModel
+                    {
+                        Barcode = ean,
+                        Price = (float)items.avg_price,
+                        Month = items.month,
+                        Year = items.year
+                    });
+                }
+
+            }
+
+            return results;
+        }
     }
 }

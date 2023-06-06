@@ -33,7 +33,6 @@ namespace FinanceApp.Controllers
 
             HttpContext.Request.Headers.TryGetValue("token", out var headerValueToken);
             var valid = _jwt.ValidateToken(headerValueToken);
-            Console.WriteLine(valid);
 
             if (valid)
             {
@@ -95,7 +94,6 @@ namespace FinanceApp.Controllers
 
             HttpContext.Request.Headers.TryGetValue("token", out var headerValueToken);
             var valid = _jwt.ValidateToken(headerValueToken);
-            Console.WriteLine(valid);
 
             if (valid)
             {
