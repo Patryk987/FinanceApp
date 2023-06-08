@@ -62,7 +62,6 @@ namespace FinanceApp.Controllers
 
             HttpContext.Request.Headers.TryGetValue("token", out var headerValueToken);
             var valid = _jwt.ValidateToken(headerValueToken);
-            Console.WriteLine(valid);
 
             if (valid)
             {
@@ -124,7 +123,6 @@ namespace FinanceApp.Controllers
 
             HttpContext.Request.Headers.TryGetValue("token", out var headerValueToken);
             var valid = _jwt.ValidateToken(headerValueToken);
-            Console.WriteLine(valid);
 
             if (valid)
             {
@@ -158,13 +156,11 @@ namespace FinanceApp.Controllers
         public ActionResult InsertPaymants([FromBody] Payment payment)
         {
             HttpContext.Request.Headers.TryGetValue("token", out var headerValueToken);
-            var valid = _jwt.ValidateToken(headerValueToken);
-            Console.WriteLine(valid);
+            var validJWT = _jwt.ValidateToken(headerValueToken);
 
-            if (valid)
+            if (validJWT)
             {
                 var decode = _jwt.DecodeToken(headerValueToken);
-                Console.WriteLine(decode);
 
                 decimal AmountPln;
 
@@ -178,13 +174,14 @@ namespace FinanceApp.Controllers
                 }
 
 
-                var sql = "INSERT INTO [dbo].[Payments]([name],[amountPLN],[typeOfPayments],[UserId],[amountWal],[waluta],[paymentsDate])" +
-                "Values (@name,@amountPLN,@typeOfPayments,@UserId,@amountWal,@waluta,@paymentsDate)";
+                var sql = "INSERT INTO [dbo].[Payments]([name],[amountPLN],[typeOfPayments],[UserId],[amountWal],[waluta],[paymentsDate],[groups])" +
+                "Values (@name,@amountPLN,@typeOfPayments,@UserId,@amountWal,@waluta,@paymentsDate,@groups)";
 
                 var parameters = new DynamicParameters();
                 parameters.Add("name", payment.Name);
                 parameters.Add("amountPLN", AmountPln);
                 parameters.Add("typeOfPayments", payment.TypeOfPayments);
+                parameters.Add("groups", payment.Groups);
                 parameters.Add("UserId", decode);
                 parameters.Add("amountWal", payment.AmountWal);
                 parameters.Add("waluta", payment.Waluta);
