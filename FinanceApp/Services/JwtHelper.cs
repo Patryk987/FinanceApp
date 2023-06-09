@@ -42,7 +42,7 @@ namespace FinanceApp.Services
 
             // List<string> jwtData = new List<string>();
             // jwtData.Add(jwtToken.id);
-            // TODO: Poprawić na bezpośrednie pobieranie id
+            // TODO: Poprawić na bezpośrednie pobieranie id i pozostałych danych
             string id = jwtToken.Claims.First().Value;
 
             return id;
