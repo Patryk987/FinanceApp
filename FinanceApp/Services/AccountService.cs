@@ -67,13 +67,15 @@ namespace FinanceApp.Services
 
             if (user == null)
             {
-                throw new BadRequestException("Invalid username or password");
+                return null;
+                //throw new BadRequestException("Invalid username or password");
             }
 
             var result = _passwordHasher.VerifyHashedPassword(user, user.Password, dto.Password);
             if (result == PasswordVerificationResult.Failed)
             {
-                throw new BadRequestException("Invalid username or password");
+                return null;
+                //throw new BadRequestException("Invalid username or password");
             }
 
             var claims = new List<Claim>()
